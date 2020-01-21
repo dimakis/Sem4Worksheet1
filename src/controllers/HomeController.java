@@ -7,10 +7,12 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.SepiaTone;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.image.*;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
-
+import javafx.imageio.*;
+import javafx.imageio.metadata.*;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -24,11 +26,12 @@ public class HomeController implements Initializable {
 
     public MenuItem openFinder;
     public ImageView imageView, imageViewEdited;
-    public Button hueBtn, saturationBtn, brightnessBtn, contrastBtn, grayScaleBtn;
+    public Button hueBtn, saturationBtn, brightnessBtn, contrastBtn, grayScaleBtn, cancelChanges;
     public Slider hueSlider, saturationSlider, sepiaSlider, brightnessSlider, contrastSlider, glowSlider;
     public Label saturationLabel, brightnessLabel, contrastLabel;
     public Label sepiaLabel;
     public Label glowLabel;
+    public Pane imageMetaData;
 
 
     @Override
@@ -42,6 +45,8 @@ public class HomeController implements Initializable {
         setBrightness();
         setContrast();
         setSepia();
+        setGrayScale();
+        setCancelChanges();
     }
 
     public void setOpenFinder() {
@@ -68,7 +73,7 @@ public class HomeController implements Initializable {
 
     }
 
-    public void setSepia()  {
+    public void setSepia() {
         SepiaTone sepiaTone = new SepiaTone();
         sepiaLabel.setText("Sepia : ");
         sepiaSlider.setOnMouseReleased(e -> {
@@ -83,7 +88,6 @@ public class HomeController implements Initializable {
     public void setSaturation() {
         ColorAdjust colorAdjust = new ColorAdjust();
         saturationLabel.setText("Saturation : ");
-//        saturationSlider.setMax(1);
         saturationSlider.setOnMouseReleased(e -> {
             colorAdjust.setSaturation(saturationSlider.getValue());
             imageViewEdited.setEffect(colorAdjust);
@@ -102,7 +106,7 @@ public class HomeController implements Initializable {
         });
     }
 
-    public void setContrast()     {
+    public void setContrast() {
         ColorAdjust colorAdjust = new ColorAdjust();
         contrastLabel.setText("Contrast : ");
         contrastSlider.setOnMouseReleased(e -> {
@@ -110,6 +114,48 @@ public class HomeController implements Initializable {
             imageViewEdited.setEffect(colorAdjust);
             contrastLabel.setText("Contrast : " + contrastSlider.getValue());
         });
+    }
+
+    public void setGrayScale() {
+        grayScaleBtn.setOnAction(e -> {
+                    Image im = imageViewEdited.getImage();
+                    PixelReader pixelReader = im.getPixelReader();
+                    WritableImage writableImage = new WritableImage(
+                            (int) im.getWidth(), (int) im.getHeight());
+                    PixelWriter pixelWriter = writableImage.getPixelWriter();
+
+                    for (int y = 0; y < im.getHeight(); y++) {
+                        for (int x = 0; x < im.getWidth(); x++) {
+                            Color color = pixelReader.getColor(x, y);
+                            double r = color.getRed();
+                            double g = color.getGreen();
+                            double b = color.getGreen();
+                            int red = (int) ((r + g + b) / 3 * 255);
+                            int green = (int) ((r + g + b) / 3 * 255);
+                            int blue = (int) ((r + g + b) / 3 * 255);
+                            color = Color.rgb(red, green, blue);
+                            pixelWriter.setColor(x, y, color);
+                        }
+                    }
+                    imageViewEdited.setImage(writableImage);
+                }
+        );
+    }
+
+    public void setCancelChanges()  {
+        cancelChanges.setOnAction(e ->  {
+            sepiaSlider.setValue(0);
+            saturationSlider.setValue(0);
+            contrastSlider.setValue(0);
+            brightnessSlider.setValue(0);
+            Image freshImage = imageView.getImage();
+            imageViewEdited.setImage(null);
+            imageViewEdited.setImage(freshImage);
+        });
+    }
+
+    public void imageMeta() {
+        Metadata meta = new Metadata();
     }
 
 }
