@@ -11,16 +11,16 @@ import javafx.scene.image.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
-import javafx.imageio.*;
-import javafx.imageio.metadata.*;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
+
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 import static SemThreeWorksheetOne.Main.pStage;
+
+//import javafx.imageio.*;
+//import javafx.imageio.metadata.*;
+//import javax.imageio.ImageIO;
 
 public class HomeController implements Initializable {
 
@@ -142,20 +142,31 @@ public class HomeController implements Initializable {
         );
     }
 
-    public void setCancelChanges()  {
-        cancelChanges.setOnAction(e ->  {
+    public void setCancelChanges() {
+        ColorAdjust ca = new ColorAdjust();
+        SepiaTone st = new SepiaTone();
+        cancelChanges.setOnAction(e -> {
             sepiaSlider.setValue(0);
+            st.setLevel(0);
             saturationSlider.setValue(0);
             contrastSlider.setValue(0);
             brightnessSlider.setValue(0);
+            ca.setContrast(0);
+            ca.setBrightness(0);
+            ca.setSaturation(0);
             Image freshImage = imageView.getImage();
             imageViewEdited.setImage(null);
             imageViewEdited.setImage(freshImage);
+            imageViewEdited.setEffect(ca);
+            sepiaLabel.setText("Sepia : ");
+            saturationLabel.setText("Saturation : ");
+            brightnessLabel.setText("Brightness : ");
+            contrastLabel.setText("Contrast : ");
         });
     }
 
     public void imageMeta() {
-        Metadata meta = new Metadata();
+//        Metadata meta = new Metadata();
     }
 
 }
