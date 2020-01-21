@@ -33,10 +33,10 @@
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" text="Preferences…" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" text="Quit" />
+                        <MenuItem fx:id="quit" mnemonicParsing="false" text="Quit" />
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
+                <Menu mnemonicParsing="false" text="Open RGB">
                     <items>
                         <MenuItem mnemonicParsing="false" text="Undo" />
                         <MenuItem mnemonicParsing="false" text="Redo" />
@@ -80,7 +80,7 @@
                                 <Button fx:id="brightnessBtn" layoutX="10.0" layoutY="42.0" mnemonicParsing="false" text="Brightness" GridPane.rowIndex="2" />
                                 <Button fx:id="contrastBtn" layoutX="10.0" layoutY="42.0" mnemonicParsing="false" text="Contrast" />
                                 <Button fx:id="grayScaleBtn" layoutX="10.0" layoutY="12.0" mnemonicParsing="false" text="Gray Scale" GridPane.rowIndex="3" />
-                                <Button fx:id="cancelChanges" layoutX="10.0" layoutY="12.0" mnemonicParsing="false" text="Open Picture" GridPane.rowIndex="4" />
+                                <Button fx:id="cancelChanges" layoutX="10.0" layoutY="12.0" mnemonicParsing="false" text="Cancel Changes" GridPane.rowIndex="4" />
                             </children>
                         </GridPane>
                         <GridPane layoutX="14.0" layoutY="531.0" prefWidth="700.0">
@@ -128,10 +128,10 @@
 
                             </children>
                         </GridPane>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="965.0" layoutY="35.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="imageViewRed" fitHeight="150.0" fitWidth="200.0" layoutX="965.0" layoutY="35.0" pickOnBounds="true" preserveRatio="true" />
                   <Label layoutX="1071.0" layoutY="22.0" text="Edited" />
-                  <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="965.0" layoutY="235.0" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="965.0" layoutY="435.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="imageViewGreen" fitHeight="150.0" fitWidth="200.0" layoutX="965.0" layoutY="235.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="imageViewBlue" fitHeight="150.0" fitWidth="200.0" layoutX="965.0" layoutY="435.0" pickOnBounds="true" preserveRatio="true" />
                   <TextArea layoutX="150.0" layoutY="365.0" prefHeight="150.0" prefWidth="150.0" />
                     </children>
                 </Pane>
