@@ -1,6 +1,7 @@
 package controllers;
 
 
+import SemThreeWorksheetOne.Main;
 import javafx.application.Platform;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -18,19 +19,22 @@ import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import static SemThreeWorksheetOne.Main.pStage;
+import static SemThreeWorksheetOne.Main.*;
 
 public class HomeController implements Initializable {
 
     public MenuItem openFinder;
-    public ImageView imageView, imageViewEdited, imageViewRed, imageViewGreen;
-    public Button hueBtn, saturationBtn, brightnessBtn, contrastBtn, grayScaleBtn, cancelChanges;
-    public Slider hueSlider, saturationSlider, sepiaSlider, brightnessSlider, contrastSlider, glowSlider;
+    public ImageView imageView, imageViewEdited;
+    public Button grayScaleBtn, cancelChanges;
+    public Slider saturationSlider, sepiaSlider, brightnessSlider, contrastSlider, glowSlider;
     public Label saturationLabel, brightnessLabel, contrastLabel, glowLabel, sepiaLabel;
     public Pane imageMetaData;
     public ColorAdjust colorAdjust = new ColorAdjust();
     public double fileSize;
-    public MenuItem quit;
+    public MenuItem quit, openRGB;
+    public Label metaData;
+    public ImageView imageViewBlue;
+
 //    public MetaData = new Metadata();
 
 
@@ -48,32 +52,35 @@ public class HomeController implements Initializable {
         setGrayScale();
         setCancelChanges();
         imageMeta();
+        quit();
+        setOpenRGB();
     }
+
 
     public void setOpenFinder() {
         openFinder.setOnAction(e -> {
-
-            final FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Open File");
-            File file = fileChooser.showOpenDialog(pStage);
-            fileSize = file.length();
-            System.out.println("Filesize : " + fileSize);
-            Image im = new Image(file.toURI().toString());
-            imageView.setImage(im);
-            imageView.setPreserveRatio(true);
-            imageViewEdited.setImage(im);
-            imageViewEdited.setPreserveRatio(true);
-
-//            try {
-//                BufferedImage bi = ImageIO.read(file);
-//            } catch (IOException ex) {
-//                ex.printStackTrace();
-//            }
+            try {
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setTitle("Open File");
+                File file = fileChooser.showOpenDialog(pStage);
+                fileSize = file.length();
+                System.out.println("Filesize : " + fileSize);
+                Image im = new Image(file.toURI().toString());
+                imageView.setImage(im);
+                imageView.setPreserveRatio(true);
+                imageViewEdited.setImage(im);
+                imageViewEdited.setPreserveRatio(true);
+            } catch (Exception ex) {
+            }
         });
     }
 
-    public void setGlow() {
-
+    public void setOpenRGB() {
+        openRGB.setOnAction(e -> {
+            sStage.setScene(Main.rgb_scene);
+            sStage.show();
+            rgbCon.rgbImages();
+        });
     }
 
     public void setSepia() {
@@ -130,10 +137,10 @@ public class HomeController implements Initializable {
                             double r = color.getRed();
                             double g = color.getGreen();
                             double b = color.getBlue();
-                            int red = (int) ((r + g + b) / 3 * 255);
-                            int green = (int) ((r + g + b) / 3 * 255);
-                            int blue = (int) ((r + g + b) / 3 * 255);
-                            color = Color.rgb(red, green, blue);
+                            int newColor = (int) ((r + g + b) / 3 * 255);
+//                            int green = (int) ((r + g + b) / 3 * 255);
+//                            int blue = (int) ((r + g + b) / 3 * 255);
+                            color = Color.rgb(newColor, newColor, newColor); //green, blue);
                             pixelWriter.setColor(x, y, color);
                         }
                     }
@@ -164,47 +171,14 @@ public class HomeController implements Initializable {
         });
     }
 
-    public void rgbImages() {
-        Image im = imageView.getImage();
-        PixelReader pixelReader = im.getPixelReader();
-        WritableImage writableImageRed = new WritableImage((int) im.getWidth(), (int) im.getHeight());
-        WritableImage writableImageGreen = new WritableImage((int) im.getWidth(), (int) im.getHeight());
-        WritableImage writableImageBlue = new WritableImage((int) im.getWidth(), (int) im.getHeight());
-        PixelWriter pixelWriterR = writableImageRed.getPixelWriter();
-        PixelWriter pixelWriterG = writableImageGreen.getPixelWriter();
-        PixelWriter pixelWriterB = writableImageBlue.getPixelWriter();
-
-
-
-
-        for (int y = 0; y < im.getHeight(); y++) {
-            for (int x = 0; x < im.getWidth(); x++) {
-                Color color = pixelReader.getColor(x, y);
-
-
-            }
-        }
-    }
 
     public void imageMeta() {
         Image im = imageView.getImage();
-        imageMetaData.setAccessibleText("File Name : " + im.getUrl());
+        metaData.setText("File Name : " + im.getUrl() + "\nFile Size : " + fileSize + "\nPixels : " + (int) im.getWidth() + "x" + (int) im.getHeight());
         System.out.println(im.getUrl());
-
-//        try {
-//            ImageInputStream iis = ImageIO.createImageInputStream(imageView.getImage());
-//            ImageReader reader = ImageIO.getImageReader((ImageWriter) iis);
-//            IIOMetadata metadata = reader.getImageMetadata(0);
-//            imageMetaData.setAccessibleText("metadata");
-//            imageMetaData.setDisable(true);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
-
     }
 
-    public void quit()  {
+    public void quit() {
         quit.setOnAction(e -> Platform.exit());
     }
 
